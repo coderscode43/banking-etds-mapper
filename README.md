@@ -1,16 +1,116 @@
-# React + Vite
+# 🚀 Project Setup and Git Workflow Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This guide explains how to set up the project in **Visual Studio Code** using **Git CLI**, and how to make, commit, and push code changes to the repository.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Setting Up the Project in VS Code
 
-## React Compiler
+### 1. Clone the Repository
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+Clone the project from the Git server using the repository URL:
 
-## Expanding the ESLint configuration
+```bash
+git clone git@192.168.51.38:ProjectName.git
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+> Replace `ProjectName.git` with your actual project name.
+
+---
+
+### 2. Open the Project in VS Code
+
+Navigate into the cloned project folder and open it in Visual Studio Code:
+
+```bash
+cd ProjectName
+code .
+```
+
+---
+
+### 3. Install Dependencies
+
+Install all required packages using **npm** or **pnpm**:
+
+```bash
+npm install
+# OR
+pnpm install
+```
+
+> **Note for pnpm users:** If some scripts are not executed correctly, run:
+
+```bash
+pnpm approve-builds
+```
+
+- Use the **space bar** to select all packages.
+- Press **Y** to confirm and approve.
+
+### 4. Run the project
+
+After installing all required packages using **npm** or **pnpm** run the project using the below command:
+
+```bash
+npm run dev # or npm start
+# OR
+pnpm dev
+```
+
+---
+
+## ✍️ Making Changes, Committing, and Pushing
+
+### 1. Set Git User Configuration (if not set)
+
+Configure your Git identity for commits:
+
+```bash
+git config user.name "Your Name"
+git config user.email "youremail@example.com"
+```
+
+---
+
+### 2. Make Code Changes
+
+Make your desired code or file changes using VS Code.
+
+---
+
+### 3. Stage Changes
+
+Stage the files you want to commit:
+
+```bash
+git add .
+```
+
+> ⚠️ Only stage the files you intend to commit. Avoid including sensitive configuration files unless necessary.
+
+---
+
+### 4. Commit Changes
+
+Commit with a descriptive message and your name:
+
+```bash
+git commit -m "Your commit message - Your Name"
+```
+
+---
+
+### 5. Push Changes to Remote
+
+Push the committed changes to the remote repository:
+
+```bash
+git push -u origin main
+```
+
+---
+
+## ✅ Done!
+
+You’ve successfully set up the project, made changes, and pushed them using Git and VS Code. Happy coding! 💻

@@ -1,7 +1,7 @@
 {
   "name": "banking-etds-mapper",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@types/node": "^24.7.1",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react-swc": "^4.1.0",
@@ -22,6 +26,9 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "tailwindcss": "^4.1.14",
     "vite": "npm:rolldown-vite@7.1.14"
   },
   "pnpm": {
@@ -29,7 +36,8 @@
       "vite": "npm:rolldown-vite@7.1.14"
     },
     "onlyBuiltDependencies": [
-      "@swc/core"
+      "@swc/core",
+      "@tailwindcss/oxide"
     ]
   }
 }
