@@ -5,19 +5,25 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
+import DefaultRedirect from "./components/navigation/DefaultRedirect";
 import PageNotFound from "./components/PageNotFound";
 import AppLayout from "./layout/AppLayout";
-import HomePage from "./pages/HomePage";
+import ImportDeducteeDetails from "./pages/ImportDeducteeDetails";
 
 const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<AppLayout />} errorElement={<ErrorPage />}>
-          <Route index element={<HomePage />} />
+        {/* Redirect root to dynamic importDeductee route */}
+        <Route path="/" element={<DefaultRedirect />} />
+
+        <Route path="home" element={<AppLayout />} errorElement={<ErrorPage />}>
+          <Route
+            path="listSearch/importDeducteeDetails/:params"
+            element={<ImportDeducteeDetails />}
+          />
         </Route>
 
-        {/* Catch-all route for 404s */}
         <Route path="*" element={<PageNotFound />} />
       </>
     )
