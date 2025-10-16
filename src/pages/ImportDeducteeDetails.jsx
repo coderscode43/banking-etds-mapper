@@ -1,9 +1,11 @@
 import common from "@/common/common";
 import FilterSelect from "@/components/FilterSelect";
+import OpenFolderModal from "@/components/modals/OpenFolderModal";
 import Pagination from "@/components/Pagination";
 import { TooltipWrapper } from "@/components/Tooltip";
 import DynamicTable from "@/components/tables/DynamicTable";
 import staticDataContext from "@/context/staticDataContext";
+import useLockBodyScroll from "@/hooks/useLockBodyScroll";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import {
   CircleCheckBig,
@@ -30,12 +32,14 @@ const categories = [
 ];
 
 const ImportDeducteeDetails = () => {
-  const entity = "importDeductee";
+  const pageName = "Import Deductee";
 
   const { params } = useParams();
-  const { financialYear, Quarter, Month } = useContext(staticDataContext);
+  const { financialYear, Quarter, Month, clientDetails } =
+    useContext(staticDataContext);
 
   const [listData, setListData] = useState([]);
+  const [showOpenFolderModal, setShowOpenFolderModal] = useState(false);
   const [gotoPage, setGotoPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,6 +50,7 @@ const ImportDeducteeDetails = () => {
     typeOfFile: "",
     panelName: params?.panelName || "",
   });
+  useLockBodyScroll(showOpenFolderModal); // Custom hook to lock body scroll
 
   useEffect(() => {
     const fetchListData = async () => {
@@ -84,17 +89,40 @@ const ImportDeducteeDetails = () => {
   // Table Details
   const tableHead = [
     { key: "srNo", label: "Sr.No" },
-    { key: "actionName", label: "Action Name" },
-    { key: "Performed By", label: "Performed On" },
+    { key: "addedBy", label: "Added By" },
+    { key: "addedOn", label: "Added On" },
+    { key: "processName", label: "Process Name" },
     { key: "status", label: "Status" },
-    { key: "remarks", label: "Remarks" },
-    { key: "updates", label: "Updates" },
+    { key: "remark", label: "Remark" },
+    { key: "completedOn", label: "Completed On" },
+    { key: "action", label: "Action" },
   ];
 
   const tableData = listData?.map((data, index) => ({
     srNo: (currentPage - 1) * 100 + (index + 1),
     ...data,
   }));
+
+  const handleOpenFolderClick = async () => {
+    setShowOpenFolderModal(true);
+
+    try {
+      const entity = "WorkingFile";
+      const parsedParams = JSON.parse(params);
+      const clientPAN = clientDetails?.ClientPAN || "";
+      const formData = {
+        ...parsedParams,
+        pan: clientPAN,
+        pageName: pageName,
+      };
+
+      const refinedFormData = common.getRefinedSearchParams(formData);
+      const response = await common.getFileList(entity, refinedFormData);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -123,15 +151,18 @@ const ImportDeducteeDetails = () => {
             </div>
 
             <div className="flex w-full items-end gap-5">
-              <button className="cursor-pointer space-x-2 rounded-sm bg-[#1761fd] px-3 py-[7px] text-white">
+              <button className="cursor-pointer space-x-2 rounded-sm bg-[var(--secondary-color)] px-3 py-[7px] text-white">
                 <FileText className="inline-block" size={20} />
                 <span>Open Additional Details</span>
               </button>
-              <button className="cursor-pointer space-x-2 rounded-sm bg-[#1761fd] px-3 py-[7px] text-white">
+              <button
+                onClick={() => handleOpenFolderClick()}
+                className="cursor-pointer space-x-2 rounded-sm bg-[var(--secondary-color)] px-3 py-[7px] text-white"
+              >
                 <FolderOpen className="inline-block" size={20} />
                 <span>Open Folder</span>
               </button>
-              <button className="cursor-pointer space-x-2 rounded-sm bg-[#1761fd] px-3 py-[7px] text-white">
+              <button className="cursor-pointer space-x-2 rounded-sm bg-[var(--secondary-color)] px-3 py-[7px] text-white">
                 <RefreshCw className="inline-block" size={20} />
                 <span>Refresh</span>
               </button>
@@ -159,8 +190,8 @@ const ImportDeducteeDetails = () => {
         <div className="rounded-md border border-gray-100 p-5 shadow-lg">
           <div className="flex">
             <div>
-              <TabGroup>
-                <div className="rounded-md bg-gray-200 p-1.5">
+              <TabGroup className={"w-full"}>
+                <div className="w-full rounded-md bg-gray-200 p-1.5">
                   <TabList className="flex gap-4">
                     {categories?.map(({ name }) => (
                       <Tab
@@ -197,7 +228,7 @@ const ImportDeducteeDetails = () => {
                             className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm/6 text-gray-900 file:mr-3 file:cursor-pointer focus:outline-none"
                           />
                         </div>
-                        <button className="cursor-pointer items-center justify-center space-x-2 rounded-sm bg-[#1761fd] px-3 py-[7px] text-white">
+                        <button className="cursor-pointer items-center justify-center space-x-2 rounded-sm bg-[var(--secondary-color)] px-3 py-[7px] text-white">
                           <Upload className="inline-block" size={20} />
                           <span>Import File</span>
                         </button>
@@ -212,17 +243,17 @@ const ImportDeducteeDetails = () => {
 
         <div className="rounded-md border border-gray-100 p-5 shadow-lg">
           <div className="flex justify-between gap-4">
-            <button className="cursor-pointer space-x-2 rounded-sm bg-[#1761fd] px-10 py-5 text-white">
+            <button className="cursor-pointer space-x-2 rounded-sm bg-[var(--secondary-color)] px-10 py-5 text-white">
               <FileChartColumnIncreasing className="inline-block" size={20} />
               <span>Generate Report</span>
             </button>
 
-            <button className="cursor-pointer space-x-2 rounded-sm bg-[#1761fd] px-10 py-5 text-white">
+            <button className="cursor-pointer space-x-2 rounded-sm bg-[var(--secondary-color)] px-10 py-5 text-white">
               <CircleCheckBig className="inline-block" size={20} />
               <span>Launch Refund & Recovery Excel</span>
             </button>
 
-            <button className="cursor-pointer space-x-2 rounded-sm bg-[#1761fd] px-10 py-5 text-white">
+            <button className="cursor-pointer space-x-2 rounded-sm bg-[var(--secondary-color)] px-10 py-5 text-white">
               <FileType className="inline-block" size={20} />
               <span>Validate Data & Segregate Data</span>
             </button>
@@ -244,17 +275,21 @@ const ImportDeducteeDetails = () => {
             </TooltipWrapper>
           </div>
           <DynamicTable
-            entity={entity}
+            entity={pageName}
             tableHead={tableHead}
             tableData={tableData}
           />
         </div>
+
+        {showOpenFolderModal && (
+          <OpenFolderModal onClose={() => setShowOpenFolderModal(false)} />
+        )}
       </div>
 
       {/* Pagination */}
       {listData.length > 0 && (
         <Pagination
-          entity={entity}
+          entity={pageName}
           setListData={setListData}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

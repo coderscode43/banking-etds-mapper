@@ -1,4 +1,5 @@
 import {
+  fileList,
   paginationListData,
   paginationWithSearchListData,
 } from "@/service/apiService";
@@ -49,6 +50,10 @@ const common = {
       resultPerPage,
       searchParams
     );
+  },
+
+  getFileList: async (entity, formData) => {
+    return await fileList(entity, formData);
   },
 
   getPagination: async (entity, pageNo) => {

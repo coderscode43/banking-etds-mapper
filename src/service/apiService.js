@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = (import.meta.env.VITE_API_BASE_URL ?? "/");
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL ?? "/";
 axios.defaults.withCredentials = true;
 
 // Pagination Functionality
@@ -23,17 +23,22 @@ export const paginationWithSearchListData = async (
   resultPerPage,
   refinedSearchParams
 ) => {
-  try {
-    const response = await axios.get(
-      `api${entity}/list/processCount/${pageNo}/${resultPerPage}`,
-      {
-        params: {
-          processData: refinedSearchParams,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    console.error("Error in fetching search entities:", error);
-  }
+  const response = await axios.get(
+    `api${entity}/list/processCount/${pageNo}/${resultPerPage}`,
+    {
+      params: {
+        processData: refinedSearchParams,
+      },
+    }
+  );
+  return response;
+};
+
+export const fileList = async (entity, formData) => {
+  const response = await axios.get(`api${entity}/getFileList`, {
+    params: {
+      formData: formData,
+    },
+  });
+  return response;
 };

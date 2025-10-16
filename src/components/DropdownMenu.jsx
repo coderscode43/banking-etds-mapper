@@ -38,7 +38,7 @@ const DropdownMenu = () => {
               onClick={() => setIsModalOpen(true)}
             >
               <img
-                className="h-6 w-6"
+                className="h-6 w-6 mix-blend-multiply"
                 src="/images/signOut.png"
                 alt="Sign Out Image"
               />
