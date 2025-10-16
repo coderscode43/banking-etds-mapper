@@ -4,6 +4,14 @@ import {
 } from "@/service/apiService";
 
 const common = {
+  handleSearchInputChange: (e, setSearchParams) => {
+    const { name, value } = e.target;
+    setSearchParams((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  },
+
   getRefinedSearchParams: (searchParams) => {
     const refinedSearchParams = (obj) =>
       Object.fromEntries(
@@ -34,8 +42,13 @@ const common = {
     return JSON.stringify(refinedSearchParams(searchParams));
   },
 
-  getSearchListData: async (entity, pageNo, searchParams) => {
-    return await paginationWithSearchListData(entity, pageNo, searchParams);
+  getSearchListData: async (entity, pageNo, resultPerPage, searchParams) => {
+    return await paginationWithSearchListData(
+      entity,
+      pageNo,
+      resultPerPage,
+      searchParams
+    );
   },
 
   getPagination: async (entity, pageNo) => {

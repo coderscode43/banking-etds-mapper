@@ -17,6 +17,7 @@ const DefaultRedirect = () => {
     fy: crtFy,
     month: crtMonth,
     quarter: crtQuarter,
+    panelName: "importRawFiles",
   };
 
   const refinedParams = common.getRefinedSearchParams(searchObj);

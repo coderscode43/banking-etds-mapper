@@ -18,17 +18,23 @@ export const paginationListData = async () =>
     // }
   };
 
-export const paginationWithSearchListData = async () =>
-  // entity,
-  // pageNo,
-  // searchParams
-  {
-    // try {
-    // const response = await axios.get(
-    //   `${API_BASE_URL}${entity}/search/get/${pageNo}/100/${searchParams}`
-    // );
-    return [];
-    // } catch (error) {
-    //   console.error("Error in fetching search entities:", error);
-    // }
-  };
+export const paginationWithSearchListData = async (
+  entity,
+  pageNo,
+  resultPerPage,
+  refinedSearchParams
+) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}${entity}/list/processCount/${pageNo}/${resultPerPage}`,
+      {
+        params: {
+          processData: refinedSearchParams,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error in fetching search entities:", error);
+  }
+};

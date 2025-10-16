@@ -1,4 +1,5 @@
 import common from "@/common/common";
+import FilterSelect from "@/components/FilterSelect";
 import Pagination from "@/components/Pagination";
 import { TooltipWrapper } from "@/components/Tooltip";
 import DynamicTable from "@/components/tables/DynamicTable";
@@ -17,37 +18,19 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const categories = [
-  { name: "Import Raw Files" },
-  { name: "Import GL Files" },
-  { name: "Import GH15 File" },
-  { name: "Import LDC Files" },
-  { name: "Import Refund & Recovery File" },
-  { name: "Latest Updated PAN" },
+  { name: "Import Raw Files", panelName: "importRawFiles" },
+  { name: "Import GL Files", panelName: "importGLFiles" },
+  { name: "Import GH15 File", panelName: "importGH15File" },
+  { name: "Import LDC Files", panelName: "importLDCFiles" },
+  {
+    name: "Import Refund & Recovery File",
+    panelName: "importRefundRecoveryFile",
+  },
+  { name: "Latest Updated PAN", panelName: "latestUpdatedPAN" },
 ];
 
-const FilterSelect = ({ label, name, options, value, onChange }) => (
-  <div className="w-full">
-    <label className="font-semibold text-[var(--primary-color)]">{label}</label>
-    <select
-      name={name}
-      id={name}
-      className="custom-scrollbar mt-1 block h-[38px] w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm/6 text-gray-900 focus:outline-none"
-      value={value}
-      onChange={onChange}
-    >
-      <option value="">Select {label}</option>
-      {options &&
-        options?.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-    </select>
-  </div>
-);
-
 const ImportDeducteeDetails = () => {
-  const entity = "importDeducteeDetails";
+  const entity = "importDeductee";
 
   const { params } = useParams();
   const { financialYear, Quarter, Month } = useContext(staticDataContext);
@@ -61,6 +44,7 @@ const ImportDeducteeDetails = () => {
     month: "",
     quarter: "",
     typeOfFile: "",
+    panelName: params?.panelName || "",
   });
 
   useEffect(() => {
@@ -69,12 +53,20 @@ const ImportDeducteeDetails = () => {
         let response;
         if (params) {
           const pageNo = 0;
-          response = await common.getSearchListData(entity, pageNo, params);
+          const resultPerPage = 100;
+          const entity = "ProcessDetail";
+          response = await common.getSearchListData(
+            entity,
+            pageNo,
+            resultPerPage,
+            params
+          );
           setSearchParams({
             fy: "",
             month: "",
             quarter: "",
             typeOfFile: "",
+            panelName: "",
           });
         }
         setListData(response?.data?.entities || []);
@@ -104,13 +96,6 @@ const ImportDeducteeDetails = () => {
     ...data,
   }));
 
-  const handleSearchParamsChange = (e) => {
-    const { name, value } = e.target;
-    setSearchParams((prev) => {
-      return { ...prev, [name]: value };
-    });
-  };
-
   return (
     <>
       <div className="space-y-5">
@@ -126,65 +111,15 @@ const ImportDeducteeDetails = () => {
                 name="fy"
                 options={financialYear}
                 value={searchParams.fy}
-                onChange={handleSearchParamsChange}
+                onChange={common.handleSearchInputChange}
               />
               <FilterSelect
                 label="Month"
                 name="month"
                 options={Month}
                 value={searchParams.month}
-                onChange={handleSearchParamsChange}
+                onChange={common.handleSearchInputChange}
               />
-
-              {/* <div className="w-full">
-                <label className="font-semibold text-[var(--primary-color)]">
-                  Financial Year
-                </label>
-                <select
-                  name="fy"
-                  id="fy"
-                  className="custom-scrollbar mt-1 block h-[38px] w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm/6 text-gray-900 focus:outline-none"
-                  onChange={(e) =>
-                    common.handleSearchInputChange(e, setSearchParams)
-                  }
-                >
-                  <option value="">Financial Year</option>
-                  {financialYear &&
-                    financialYear.length > 0 &&
-                    financialYear.map((state, index) => {
-                      return (
-                        <option key={index} value={state}>
-                          {state}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div> */}
-
-              {/* <div className="w-full">
-                <label className="font-semibold text-[var(--primary-color)]">
-                  Month
-                </label>
-                <select
-                  name="month"
-                  id="month"
-                  className="custom-scrollbar mt-1 block h-[38px] w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm/6 text-gray-900 focus:outline-none"
-                  onChange={(e) =>
-                    common.handleSearchInputChange(e, setSearchParams)
-                  }
-                >
-                  <option value="">Select Month</option>
-                  {Month &&
-                    Month.length > 0 &&
-                    Month.map((state, index) => {
-                      return (
-                        <option key={index} value={state}>
-                          {state}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div> */}
             </div>
 
             <div className="flex w-full items-end gap-5">
@@ -204,69 +139,19 @@ const ImportDeducteeDetails = () => {
           </div>
 
           <div className="flex justify-end gap-5">
-            {/* <div className="w-full">
-              <label className="font-semibold text-[var(--primary-color)]">
-                Quarter
-              </label>
-              <select
-                name="quarter"
-                id="quarter"
-                className="custom-scrollbar mt-1 block h-[38px] w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm/6 text-gray-900 focus:outline-none"
-                onChange={(e) =>
-                  common.handleSearchInputChange(e, setSearchParams)
-                }
-              >
-                <option value="">Quarter</option>
-                {Quarter &&
-                  Quarter.length > 0 &&
-                  Quarter.map((state, index) => {
-                    return (
-                      <option key={index} value={state}>
-                        {state}
-                      </option>
-                    );
-                  })}
-              </select>
-            </div> */}
-
-            {/* <div className="w-full">
-              <label className="font-semibold text-[var(--primary-color)]">
-                Type of file
-              </label>
-              <select
-                name="typeOfFile"
-                id="typeOfFile"
-                className="custom-scrollbar mt-1 block h-[38px] w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm/6 text-gray-900 focus:outline-none"
-                onChange={(e) =>
-                  common.handleSearchInputChange(e, setSearchParams)
-                }
-              >
-                <option value="">Type of file</option>
-                {Month &&
-                  Month.length > 0 &&
-                  Month.map((state, index) => {
-                    return (
-                      <option key={index} value={state}>
-                        {state}
-                      </option>
-                    );
-                  })}
-              </select>
-            </div> */}
-
             <FilterSelect
               label="Quarter"
               name="quarter"
               options={Quarter}
               value={searchParams.quarter}
-              onChange={handleSearchParamsChange}
+              onChange={common.handleSearchInputChange}
             />
             <FilterSelect
               label="Type of file"
               name="typeOfFile"
               options={Month}
               value={searchParams.typeOfFile}
-              onChange={handleSearchParamsChange}
+              onChange={common.handleSearchInputChange}
             />
           </div>
         </div>
