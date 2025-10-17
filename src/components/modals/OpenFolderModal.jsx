@@ -5,7 +5,7 @@ import AddFolderModal from "./AddFolderModal";
 import AddDocumentModal from "./AddDocumentModal";
 import CreateFolderModal from "./CreateFolderModal";
 
-const OpenFolderModal = ({ onClose }) => {
+const OpenFolderModal = ({ onClose, fileListData }) => {
   const [showAddFolderModal, setShowAddFolderModal] = useState(false);
   const [showAddDocumentModal, setShowAddDocumentModal] = useState(false);
   const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
@@ -25,14 +25,12 @@ const OpenFolderModal = ({ onClose }) => {
   // Table Details
   const tableHead = [
     { key: "select", label: "Select" },
-    { key: "fileName", label: "File Name" },
+    { key: "name", label: "File Name" },
     { key: "lastModified", label: "Last Modified" },
     { key: "fileType", label: "File Type" },
-    { key: "fileSize", label: "File Size" },
+    { key: "size", label: "File Size" },
     { key: "action", label: "Action" },
   ];
-
-  const tableData = [];
 
   return (
     <>
@@ -54,7 +52,7 @@ const OpenFolderModal = ({ onClose }) => {
           {/* Body */}
           <div className="space-y-5 p-6">
             {/* Top Buttons */}
-            <div className="flex gap-3">
+            <div className="flex justify-end gap-3">
               <button
                 className="cursor-pointer space-x-1 rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
                 onClick={() => setShowAddFolderModal(true)}
@@ -80,8 +78,9 @@ const OpenFolderModal = ({ onClose }) => {
             <div className="flex gap-3">
               <input
                 type="text"
+                value={`/${fileListData[0]?.lastLocation || ""}`}
                 placeholder="Add Bulk Token Number"
-                className="flex-grow rounded-md border border-gray-300 px-4 py-1.5 focus:outline-none"
+                className="flex-grow rounded-md border border-gray-300 px-4 py-1.5 text-[15px] text-gray-700 focus:outline-none"
               />
               <button className="cursor-pointer space-x-1 rounded-md bg-green-500 px-3 py-1.5 text-white hover:bg-green-600">
                 <i className="fa-solid fa-magnifying-glass"></i>
@@ -89,7 +88,7 @@ const OpenFolderModal = ({ onClose }) => {
             </div>
 
             {/* Table */}
-            <DynamicTable tableHead={tableHead} tableData={tableData} />
+            <DynamicTable tableHead={tableHead} tableData={fileListData} />
           </div>
 
           {/* Footer Buttons */}

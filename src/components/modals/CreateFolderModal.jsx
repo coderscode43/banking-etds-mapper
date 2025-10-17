@@ -68,7 +68,7 @@ const CreateFolderModal = ({ onClose, onCreateFolder }) => {
             }`}
           >
             <i className="fa-solid fa-folder-plus"></i>{" "}
-            <span>Add Document</span>
+            <span>Create Folder</span>
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import StickyScrollbarWrapper from "../StickyScrollbarWrapper";
 
-const DynamicTable = ({ tableHead, tableData, month, autoResize }) => {
+const DynamicTable = ({ tableHead, tableData, autoResize }) => {
   return (
     <div className="relative w-full">
       <div className="w-full overflow-clip rounded-md border border-gray-200">
@@ -51,13 +51,9 @@ const DynamicTable = ({ tableHead, tableData, month, autoResize }) => {
                   return (
                     <tr
                       key={index}
-                      className={`cursor-pointer text-center ${
-                        "month" in data
-                          ? data.month === month
-                            ? "bg-blue-100"
-                            : "bg-white hover:bg-gray-100"
-                          : ""
-                      }`}
+                      className={
+                        "cursor-pointer bg-white text-center hover:bg-gray-100"
+                      }
                     >
                       {tableHead?.map(({ key }, colIndex) => (
                         <td

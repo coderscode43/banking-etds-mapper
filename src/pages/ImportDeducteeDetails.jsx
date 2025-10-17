@@ -39,6 +39,7 @@ const ImportDeducteeDetails = () => {
     useContext(staticDataContext);
 
   const [listData, setListData] = useState([]);
+  const [fileListData, setFileListData] = useState([]);
   const [showOpenFolderModal, setShowOpenFolderModal] = useState(false);
   const [gotoPage, setGotoPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
@@ -118,7 +119,7 @@ const ImportDeducteeDetails = () => {
 
       const refinedFormData = common.getRefinedSearchParams(formData);
       const response = await common.getFileList(entity, refinedFormData);
-      console.log(response);
+      setFileListData(response?.data || []);
     } catch (error) {
       console.error(error);
     }
@@ -282,7 +283,10 @@ const ImportDeducteeDetails = () => {
         </div>
 
         {showOpenFolderModal && (
-          <OpenFolderModal onClose={() => setShowOpenFolderModal(false)} />
+          <OpenFolderModal
+            onClose={() => setShowOpenFolderModal(false)}
+            fileListData={fileListData}
+          />
         )}
       </div>
 
